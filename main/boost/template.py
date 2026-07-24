@@ -60,6 +60,11 @@ _libs = [
     "wserialization",
 ]
 
+# b2's config checks disable this stacktrace backend on 32-bit arm
+# (arm_32: "boost.stacktrace.addr2line : no"); the lib is never built
+if self.profile().arch in ("armv7", "armhf"):
+    _libs.remove("stacktrace_addr2line")
+
 match self.profile().arch:
     case "ppc64le" | "ppc64" | "ppc":
         _arch, _abi = "power", "sysv"
