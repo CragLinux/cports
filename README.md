@@ -1,3 +1,39 @@
+# astro-cports — Astro's fork of Chimera cports
+
+> **This is a fork.** It is a downstream copy of
+> [`chimera-linux/cports`](https://github.com/chimera-linux/cports),
+> maintained for the [Astro](https://github.com/aka-mj/astro) embedded
+> Linux distribution. It is **not** Chimera cports and is not affiliated
+> with or endorsed by the Chimera Linux project. Do not report Astro-fork
+> issues to Chimera, and do not treat packages built here as Chimera
+> packages.
+>
+> **Provenance.** Forked from upstream commit `e3c9e1a0` ("user/soju: fix
+> checksum"). The packaging system (`cbuild`), the API, and the vast
+> majority of templates are Chimera's work, used under their BSD license
+> (retained verbatim in [`COPYING.md`](COPYING.md)). Astro's changes sit
+> on top as ordinary commits and are limited to: a handful of cross-build
+> and toolchain fixes upstream had not taken (each `main/<pkg>:` commit
+> explains itself), a few packages Astro needs that upstream does not ship
+> (`rauc`, `libubootenv`, `basu`), and downstream overrides of a few
+> templates (`chrony`, `openssh`, `readline`). See `git log` for the exact
+> delta from the fork point.
+>
+> **Why a fork.** Astro pins cports for reproducible builds and had been
+> carrying these changes as out-of-tree patches. Upstream declined the
+> fixes and does not accept AI-assisted contributions, and an independent
+> review flagged the risk of upstream changes silently breaking our
+> pinned builds. Owning a fork removes that coupling; the trade-off is
+> that Astro now maintains version and security currency for this tree
+> itself (see the update-checker tooling and CI in this repo). We re-pin
+> deliberately, never automatically.
+>
+> **Contributing.** This fork welcomes AI-assisted contributions — see
+> [`CONTRIBUTING.md`](CONTRIBUTING.md). Distribution-agnostic template
+> fixes are still best sent to Chimera upstream where their policies allow.
+
+---
+
 # cports
 
 Cports is a collection of source package ports for Chimera. The system has been
