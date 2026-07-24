@@ -4,7 +4,10 @@ pkgrel = 0
 _gitrev = "5662aa890b08e7daec58942fdaae5b105cb881af"
 build_style = "meson"
 hostmakedepends = ["meson", "pkgconf"]
-makedepends = ["dinit-chimera", "dbus-devel", "libdinitctl-devel"]
+# dbus-dinit: provides svc:/usvc:dbus-daemon for the runtime-deps service
+# scan; native builds get it implicitly (checkdepends dbus + install_if),
+# cross builds skip checkdepends so it must be explicit
+makedepends = ["dbus-devel", "dbus-dinit", "dinit-chimera", "libdinitctl-devel"]
 checkdepends = ["dbus"]
 depends = ["dbus"]
 replaces = ["dbus-dinit<1.14.10-r14"]
