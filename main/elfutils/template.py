@@ -5,9 +5,7 @@ build_style = "gnu_configure"
 configure_args = [
     "--disable-nls",
     "--disable-werror",
-    "--enable-debuginfod",
     "--enable-deterministic-archives",
-    "--enable-libdebuginfod",
     "--with-zstd",
     "--program-prefix=eu-",
 ]
@@ -22,10 +20,8 @@ makedepends = [
     "argp-standalone",
     "bzip2-devel",
     "chimerautils-devel",
-    "curl-devel",
     "json-c-devel",
     "libarchive-devel",
-    "libmicrohttpd-devel",
     "linux-headers",
     "musl-bsd-headers",
     "musl-obstack-devel",
@@ -49,6 +45,19 @@ tool_flags = {
     "LDFLAGS": ["-Wl,-z,stack-size=2097152"],
 }
 
+# debuginfod's dependency closure (libmicrohttpd -> gnutls -> unbound ->
+# protobuf-c -> protobuf) cannot be cross-built for a self-hosted 32-bit
+# arm repo: main/protobuf is marked broken for cross builds. Build
+# elfutils without debuginfod there; everything else (libelf/libdw/tools)
+# is unaffected.
+_have_debuginfod = self.profile().arch not in ("armv7", "armhf")
+
+if _have_debuginfod:
+    configure_args += ["--enable-debuginfod", "--enable-libdebuginfod"]
+    makedepends += ["curl-devel", "libmicrohttpd-devel"]
+else:
+    configure_args += ["--disable-debuginfod", "--disable-libdebuginfod"]
+
 if self.profile().arch == "x86_64":
     makedepends += ["sysprof-capture"]
     configure_args += ["--enable-stacktrace"]
@@ -62,7 +71,7 @@ def post_install(self):
     self.rename("usr/bin/eu-eustack", "eu-stack")
 
 
-@subpackage("elfutils-debuginfod")
+@subpackage("elfutils-debuginfod", _have_debuginfod)
 def _(self):
     self.subdesc = "debuginfod"
     # transitional
@@ -74,7 +83,7 @@ def _(self):
     ]
 
 
-@subpackage("elfutils-debuginfod-libs")
+@subpackage("elfutils-debuginfod-libs", _have_debuginfod)
 def _(self):
     self.subdesc = "debuginfod library"
     # transitional
