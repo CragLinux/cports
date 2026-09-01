@@ -3,6 +3,7 @@ pkgver = "2.4.12"
 pkgrel = 0
 build_style = "cmake"
 configure_args = [
+    "-DDOCTEST_WITH_TESTS=OFF",
     "-DDOCTEST_USE_STD_HEADERS=ON",
 ]
 hostmakedepends = [

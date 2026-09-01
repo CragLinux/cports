@@ -1,12 +1,15 @@
 pkgname = "iwd"
 pkgver = "3.12"
-pkgrel = 0
+pkgrel = 1
 build_style = "gnu_configure"
 configure_args = [
     # junk cflags that redefine FORTIFY
     "--disable-optimization",
     "--disable-systemd-service",
     "--enable-dbus-policy",
+    # explicit: the default is `pkgconf --variable=datadir dbus-1`, which
+    # is sysroot-prefixed in cross builds and mispackages the policy files
+    "--with-dbus-datadir=/usr/share",
     "--enable-wired",
     "--enable-pie",
 ]
