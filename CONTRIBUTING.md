@@ -1,11 +1,12 @@
-# Contributing to astro-cports
+# Contributing to CragLinux/cports
 
-> **This is the Astro fork of Chimera's `cports`, not upstream cports.**
-> See [`README.md`](README.md) for provenance. Contributions here flow to
-> the Astro distribution, not to Chimera. The packaging system, API, and
-> the bulk of the templates are Chimera's work under their BSD license
-> ([`COPYING.md`](COPYING.md)); please contribute distribution-agnostic
-> template fixes to Chimera upstream where their policies allow.
+> **This is the Crag Linux fork of Chimera's `cports`, not upstream
+> cports.** See [`README.md`](README.md) for provenance. Contributions
+> here flow to the Crag Linux distribution, not to Chimera. The packaging
+> system, API, and the bulk of the templates are Chimera's work under
+> their BSD license ([`COPYING.md`](COPYING.md)); please contribute
+> distribution-agnostic template fixes to Chimera upstream where their
+> policies allow.
 
 ## AI-assisted contributions are welcome here
 
@@ -17,7 +18,7 @@ machine-assisted:
 - **You own it.** A human contributor is accountable for every change:
   you understand it, you can defend it in review, and your name is on it.
 - **It is verified.** The change builds and, where applicable, boots /
-  passes the relevant Astro CI gate. "The AI said so" is not evidence;
+  passes the relevant Crag Linux CI gate. "The AI said so" is not evidence;
   a green build log is. State how you verified it in the PR.
 - **It is honest.** Disclose AI involvement if it was substantial, cite
   the sources the analysis rests on (upstream code, manpages, specs),

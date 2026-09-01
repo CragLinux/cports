@@ -1,11 +1,13 @@
-# Astro addition (not in cports upstream; docs/05 §1): libubootenv is the
-# userspace U-Boot environment library + fw_printenv/fw_setenv tools. RAUC's
-# uboot bootloader backend shells out to fw_setenv/fw_printenv to flip
-# BOOT_ORDER / BOOT_x_LEFT (AD-009). Config comes from /etc/fw_env.config,
-# which Astro generates per board at rootfs assembly (env-in-FAT file on the
-# bootenv partition — MIGRATION-NOTES §12 deviation 1).
+# Crag Linux addition (not in cports upstream; docs/05 §1): libubootenv
+# is the userspace U-Boot environment library + fw_printenv/fw_setenv
+# tools. RAUC's uboot bootloader backend shells out to fw_setenv/fw_printenv
+# to flip BOOT_ORDER / BOOT_x_LEFT (AD-009). Config comes from
+# /etc/fw_env.config, which Crag Linux generates per board at rootfs
+# assembly (env-in-FAT file on the bootenv partition — MIGRATION-NOTES
+# §12 deviation 1).
 # Candidate for upstreaming to Chimera cports (standard package, no
-# Astro-specific content; see build/patches/cports/UPSTREAMING.md process note).
+# Crag-specific content; see build/patches/cports/UPSTREAMING.md process
+# note).
 pkgname = "libubootenv"
 pkgver = "0.3.7"
 pkgrel = 1

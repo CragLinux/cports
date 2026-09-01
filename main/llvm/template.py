@@ -133,10 +133,11 @@ else:
     ]
 
 # from stage 2 only, pointless to build before
-# Astro build-time patch (see build/patches/cports/): mlir/flang cannot yet
-# cross-build — flang-rt's runtimes configure requires a *running* flang
-# (the freshly cross-built one is target-arch), cf. the FIXME below about
-# cross mlir. Disable both for cross until upstream supports it.
+# Crag Linux build-time patch (see build/patches/cports/): mlir/flang
+# cannot yet cross-build — flang-rt's runtimes configure requires a
+# *running* flang (the freshly cross-built one is target-arch), cf. the
+# FIXME below about cross mlir. Disable both for cross until upstream
+# supports it.
 _enable_mlir = self.stage >= 2 and not self.profile().cross
 _enable_flang = _enable_mlir and self.profile().wordsize == 64
 
@@ -180,10 +181,11 @@ def init_configure(self):
 
     # grab these from the host
     self.configure_args += [
-        # Astro build-time patch (see build/patches/cports/): tools NOT shipped
-        # by the host llvm (llvm-min-tblgen, mlir-irdl-to-cpp, ...) are built
-        # in LLVM's NATIVE sub-build, which otherwise inherits the cross CC
-        # and produces target binaries that cannot run in the bldroot.
+        # Crag Linux build-time patch (see build/patches/cports/): tools
+        # NOT shipped by the host llvm (llvm-min-tblgen, mlir-irdl-to-cpp,
+        # ...) are built in LLVM's NATIVE sub-build, which otherwise
+        # inherits the cross CC and produces target binaries that cannot
+        # run in the bldroot.
         "-DCROSS_TOOLCHAIN_FLAGS_NATIVE=-DCMAKE_C_COMPILER=/usr/bin/clang;-DCMAKE_CXX_COMPILER=/usr/bin/clang++",
         "-DLLVM_NATIVE_TOOL_DIR=/usr/bin",
         "-DLLVM_CONFIG_PATH=/usr/bin/llvm-config",

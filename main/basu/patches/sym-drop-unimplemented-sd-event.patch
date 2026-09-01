@@ -4,7 +4,7 @@ implementation of these three functions exists anywhere in the tree.
 GNU ld silently ignores version-script assignments for undefined
 symbols; LLD makes them a hard error ("version script assignment of
 'global' to symbol ... failed"), so the library does not link on
-clang/lld toolchains (Chimera/Astro). Drop the dead exports.
+clang/lld toolchains (Chimera/Crag Linux). Drop the dead exports.
 
 --- a/src/libsystemd/libsystemd.sym
 +++ b/src/libsystemd/libsystemd.sym
