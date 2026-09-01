@@ -1,5 +1,5 @@
 #!/bin/sh
-# Astro: generate the sshd host key on first boot — ed25519 ONLY.
+# Crag Linux: generate the sshd host key on first boot — ed25519 ONLY.
 # Upstream's `ssh-keygen -A` also generates an RSA host key, whose prime
 # search is effectively unbounded on TCG-emulated guests (observed: stuck
 # for minutes-to-forever on qemu-armv7 cortex-a15 emulation, leaving sshd

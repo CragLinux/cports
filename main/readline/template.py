@@ -1,4 +1,4 @@
-# ASTRO SHADOW of cports main/readline (M1 wave 2, recorded in
+# CRAG SHADOW of cports main/readline (M1 wave 2, recorded in
 # MIGRATION-NOTES §12): the pinned template fetches a git snapshot from
 # git.savannah.gnu.org's cgit, which is unreachable/erroring (HTTP 400
 # after multi-minute stalls) and has no mirror with a matching checksum.

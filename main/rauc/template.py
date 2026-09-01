@@ -1,8 +1,9 @@
-# Astro addition (not in cports upstream; docs/05 §1): RAUC is the A/B
-# update installer (AD-010 verity bundles, AD-011 dinit-supervised service).
-# Stock port — Astro's dinit glue, system.conf generation and keyring live
-# in the image assembly (boards/common/overlay + rootfs stage), not here,
-# so this template stays upstreamable to Chimera cports.
+# Crag Linux addition (not in cports upstream; docs/05 §1): RAUC is the
+# A/B update installer (AD-010 verity bundles, AD-011 dinit-supervised
+# service).
+# Stock port — Crag Linux's dinit glue, system.conf generation and keyring
+# live in the image assembly (boards/common/overlay + rootfs stage), not
+# here, so this template stays upstreamable to Chimera cports.
 # Notes:
 #  - streaming (NBD) + network (libcurl) + json stay on: docs/05 §3
 #    HTTP(S) streaming installs are a v1 capability.

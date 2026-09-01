@@ -1,11 +1,11 @@
-# Astro shadow of cports main/chrony (M3 phase 4, docs/07 §6): identical
-# to the pinned template except NTS/gnutls support is removed. The pinned
-# chrony pulls gnutls-devel, and full gnutls cannot be cross-built in this
-# pipeline: gnutls (libdane) → unbound → protobuf-c → protobuf, and
-# protobuf is marked broken for cross in the pin ("generated
-# protobuf-targets.cmake looks for protoc in target sysroot"). Astro's
-# baked chrony.conf is pool+makestep only — NTS was never part of the
-# docs/07 §6 story (time.synced comes from adjtimex STA_UNSYNC), and
+# Crag Linux shadow of cports main/chrony (M3 phase 4, docs/07 §6):
+# identical to the pinned template except NTS/gnutls support is removed.
+# The pinned chrony pulls gnutls-devel, and full gnutls cannot be
+# cross-built in this pipeline: gnutls (libdane) → unbound → protobuf-c →
+# protobuf, and protobuf is marked broken for cross in the pin ("generated
+# protobuf-targets.cmake looks for protoc in target sysroot"). Crag
+# Linux's baked chrony.conf is pool+makestep only — NTS was never part of
+# the docs/07 §6 story (time.synced comes from adjtimex STA_UNSYNC), and
 # sechash/CMAC still come from nettle (kept in makedepends), so plain NTP
 # authentication (keys) is unaffected. pkgrel is bumped so this build
 # always supersedes any same-version chrony and cbuild never skips it as
