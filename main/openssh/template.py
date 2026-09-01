@@ -1,6 +1,12 @@
+# Astro shadow of cports main/openssh (GAP §3.2): identical to the pinned
+# template except GSSAPI/Kerberos support is removed (heimdal does not
+# cross-build — its asn1_compile generator is built target-arch and cannot
+# run in the bldroot). pkgrel is bumped so the kerberos-free build always
+# supersedes any same-version openssh (stale index entries, Chimera binary
+# repo) and so cbuild does not skip the build as already-present.
 pkgname = "openssh"
 pkgver = "10.3_p1"
-pkgrel = 1
+pkgrel = 3
 build_style = "gnu_configure"
 configure_args = [
     "--datadir=/usr/share/openssh",
@@ -13,7 +19,6 @@ configure_args = [
     "--with-mantype=doc",
     "--with-pam",
     "--with-libedit",
-    "--with-kerberos5",
     "--with-pid-dir=/run",
     "--with-privsep-user=nobody",
     "--with-privsep-path=/var/chroot/ssh",
@@ -31,7 +36,6 @@ hostmakedepends = [
 ]
 makedepends = [
     "dinit-chimera",
-    "heimdal-devel",
     "ldns-devel",
     "libedit-devel",
     "libfido2-devel",
@@ -69,5 +73,10 @@ def post_install(self):
 
     self.install_tmpfiles(self.files_path / "tmpfiles.conf")
 
+    # Astro: ed25519-only host key generation (see files/gen-host-keys —
+    # ssh-keygen -A's RSA keygen never finishes on TCG-emulated guests)
+    self.install_file(
+        self.files_path / "gen-host-keys", "usr/lib/openssh", mode=0o755
+    )
     self.install_service(self.files_path / "ssh-keygen")
     self.install_service(self.files_path / "sshd")

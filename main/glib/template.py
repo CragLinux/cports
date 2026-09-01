@@ -50,6 +50,17 @@ if self.profile().arch == "riscv64":
     # ftbfs
     configure_args += ["-Dtests=false"]
 
+if self.profile().cross:
+    # gobject-introspection is marked !cross ("tons of janky hackery"),
+    # so a cross glib cannot have introspection data; nothing in a
+    # cross-built (self-hosted arch) repo consumes it either.
+    # sysprof is disabled with it: with it enabled, the generated
+    # glib-2.0.pc carries "Requires.private: sysprof-capture-4", which no
+    # package in a self-built repo provides (sysprof-capture's .pc ships
+    # inside glib-devel on native builds) — every downstream pkg-config
+    # lookup of glib-2.0 then fails.
+    configure_args += ["-Dintrospection=disabled", "-Dsysprof=disabled"]
+
 
 def post_install(self):
     from cbuild.util import python

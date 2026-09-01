@@ -1,7 +1,31 @@
-# Contributing to cports
+# Contributing to astro-cports
 
-While Chimera is not made of only `cports`, most people will probably want
-to contribute here.
+> **This is the Astro fork of Chimera's `cports`, not upstream cports.**
+> See [`README.md`](README.md) for provenance. Contributions here flow to
+> the Astro distribution, not to Chimera. The packaging system, API, and
+> the bulk of the templates are Chimera's work under their BSD license
+> ([`COPYING.md`](COPYING.md)); please contribute distribution-agnostic
+> template fixes to Chimera upstream where their policies allow.
+
+## AI-assisted contributions are welcome here
+
+Unlike upstream, this fork **explicitly welcomes AI-assisted and
+AI-authored contributions.** The bar is the work, not the tool that
+helped write it. What we require of any contribution, human- or
+machine-assisted:
+
+- **You own it.** A human contributor is accountable for every change:
+  you understand it, you can defend it in review, and your name is on it.
+- **It is verified.** The change builds and, where applicable, boots /
+  passes the relevant Astro CI gate. "The AI said so" is not evidence;
+  a green build log is. State how you verified it in the PR.
+- **It is honest.** Disclose AI involvement if it was substantial, cite
+  the sources the analysis rests on (upstream code, manpages, specs),
+  and never fabricate reproduction steps or test results.
+
+Contributions that are unverified, that misrepresent testing, or that no
+human is prepared to own will be declined — same as any low-quality
+change, regardless of how they were produced.
 
 ## Getting started
 
@@ -11,10 +35,6 @@ from any other project.
 We suggest to avoid using GitHub's web editor for contributions, especially
 for templates, since those need testing. Therefore, if you do not know at
 least the basics of Git, use some of the public resources to get familiar.
-
-Do not use AI tools to prepare your contribution. Such contributions will
-not be accepted if found, and anyone submitting them will be barred from
-contributing further.
 
 Also read [`USING_GIT.md`](USING_GIT.md) if you are unfamiliar with Git.
 
