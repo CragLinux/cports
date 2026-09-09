@@ -3,23 +3,29 @@ Author: q66 <q66@chimera-linux.org>
 Date:   Thu Jun 1 03:13:52 2023 +0200
 
     use prebuilt manpages
+    
+    refreshed for 2.41 (block moved; manadocs are File objects, so
+    fs.replace_suffix instead of str.split; keep the asciidoctor
+    find_program so po-man still sees a defined variable)
 
 diff --git a/meson.build b/meson.build
-index d7e5352..205db27 100644
+index 1537f5e..1c4e76e 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -3345,33 +3345,9 @@ if build_libuuid
+@@ -4040,33 +4040,12 @@ if build_libuuid
    }
  endif
  
--asciidoctor = find_program('asciidoctor', required : false)
++# asciidoctor is intentionally absent from the bldroot: the dist tarball
++# ships prebuilt pages, and po-man's asciidoctor.found() test stays false.
+ asciidoctor = find_program('asciidoctor', required : false)
 -if asciidoctor.found()
 +if true
    foreach adoc : manadocs
--    name = adoc.split('/')[-1]
--    page = name.split('.adoc')[0]
+-    name = fs.name(adoc)
+-    page = fs.stem(adoc)
 -    section = page.split('.')[-1]
--    mandirn = join_paths(mandir, 'man' + section)
+-    mandirn = mandir / 'man' + section
 -    input = adoc
 -
 -    custom_target(
@@ -40,7 +46,7 @@ index d7e5352..205db27 100644
 -      depfile : page + '.deps',
 -      install: true,
 -      install_dir : mandirn)
-+    install_man(adoc.split('.adoc')[0])
++    install_man(fs.replace_suffix(adoc, ''))
    endforeach
  
    foreach link_name, target : manlinks

@@ -1,9 +1,11 @@
+diff --git a/meson.build b/meson.build
+index 1537f5e..5c938af 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -1070,7 +1070,6 @@ exe = executable(
+@@ -1243,7 +1243,6 @@ exe = executable(
  if opt and not is_disabler(exe)
    exes += exe
-   manadocs += ['login-utils/runuser.1.adoc']
+   manadocs += runuser_manadocs
 -  bashcompletionslinks += {'runuser': 'su'}
  endif
  
