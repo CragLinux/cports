@@ -5,7 +5,7 @@
 # always supersedes any same-version openssh (stale index entries, Chimera
 # binary repo) and so cbuild does not skip the build as already-present.
 pkgname = "openssh"
-pkgver = "10.4_p1"
+pkgver = "10.5_p1"
 pkgrel = 1
 build_style = "gnu_configure"
 configure_args = [
@@ -47,7 +47,7 @@ pkgdesc = "OpenSSH free Secure Shell (SSH) client and server implementation"
 license = "SSH-OpenSSH"
 url = "https://www.openssh.com"
 source = f"https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-{pkgver.replace('_', '')}.tar.gz"
-sha256 = "ef6026dd2aea8d56059638d5d3262902c892ceba9f88395835e0d06d3fb63238"
+sha256 = "d44d28a839ea9daf969cc69150fde59910b2b39361dad81a3bd6cbd19218db11"
 file_modes = {"usr/lib/ssh-keysign": ("root", "root", 0o4755)}
 # CFI: does not work; maybe make testsuite work first
 hardening = ["vis", "!cfi"]
