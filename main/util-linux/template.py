@@ -1,5 +1,5 @@
 pkgname = "util-linux"
-pkgver = "2.41"
+pkgver = "2.41.6"
 pkgrel = 0
 build_style = "meson"
 configure_args = [
@@ -41,6 +41,7 @@ configure_args = [
     "-Dbuild-write=disabled",
     "-Dbuild-python=disabled",
     "-Dsystemd=disabled",
+    "-Dtranslate-docs=disabled",
     "-Dsysvinit=disabled",
 ]
 hostmakedepends = [
@@ -65,10 +66,10 @@ depends = [self.with_pkgver("util-linux-common")]
 pkgdesc = "Miscellaneous Linux utilities"
 license = "GPL-2.0-or-later"
 url = "https://www.kernel.org/pub/linux/utils/util-linux"
-# NOTE: v<pkgver> works while pkgver is two-part (2.41); for x.y.z the
-# directory is v<x.y> (restore the pkgver[:-2] idiom then).
-source = f"$(KERNEL_SITE)/utils/util-linux/v{pkgver}/util-linux-{pkgver}.tar.xz"
-sha256 = "81ee93b3cfdfeb7d7c4090cedeba1d7bbce9141fd0b501b686b3fe475ddca4c6"
+source = (
+    f"$(KERNEL_SITE)/utils/util-linux/v{pkgver[:-2]}/util-linux-{pkgver}.tar.xz"
+)
+sha256 = "e596083744e746be7d2823b62b43f4418dd7bf56303b4dc09e6fe8112fe3d7ed"
 tool_flags = {"CFLAGS": ["-D_DIRENT_HAVE_D_TYPE"]}
 # checkdepends are missing
 options = ["!check"]
@@ -77,10 +78,6 @@ options = ["!check"]
 def post_extract(self):
     self.rm("tests/ts/lsns/ioctl_ns", force=True)
     self.rm("tests/ts/col/multibyte", force=True)
-    # the 2.41 dist tarball omits bash-completion/{bits,choom,coresched}
-    # (present in upstream git); drop this workaround on the next version bump
-    for f in ["bits", "choom", "coresched"]:
-        self.cp(self.files_path / f"{f}-completion", f"bash-completion/{f}")
 
 
 def init_configure(self):
