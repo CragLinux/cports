@@ -1,5 +1,5 @@
 pkgname = "dinit"
-pkgver = "0.22.0"
+pkgver = "0.22.1"
 pkgrel = 0
 build_style = "configure"
 configure_args = [
@@ -15,7 +15,7 @@ pkgdesc = "Service manager and init system"
 license = "Apache-2.0"
 url = "https://davmac.org/projects/dinit"
 source = f"https://github.com/davmac314/dinit/archive/v{pkgver}.tar.gz"
-sha256 = "926d431e1c596a214612a1fc31c66fc0356630c5759edc313fe7153eaf462ffc"
+sha256 = "8907d4f668259c4f66d9d2c7cbbb55d455c28dc433596ab29005d589cb572e1e"
 # hand-rolled configure scripts/makefiles lol
 tool_flags = {"CXXFLAGS": ["-fno-rtti"]}
 hardening = ["vis", "cfi"]
