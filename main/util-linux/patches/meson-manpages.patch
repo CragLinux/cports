@@ -4,15 +4,15 @@ Date:   Thu Jun 1 03:13:52 2023 +0200
 
     use prebuilt manpages
     
-    refreshed for 2.41 (block moved; manadocs are File objects, so
+    refreshed for 2.42 (block moved; manadocs are File objects, so
     fs.replace_suffix instead of str.split; keep the asciidoctor
     find_program so po-man still sees a defined variable)
 
 diff --git a/meson.build b/meson.build
-index 1537f5e..1c4e76e 100644
+index d23e1b0..328a9b0 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -4040,33 +4040,12 @@ if build_libuuid
+@@ -4125,32 +4125,12 @@ if build_libuuid
    }
  endif
  
@@ -22,7 +22,6 @@ index 1537f5e..1c4e76e 100644
 -if asciidoctor.found()
 +if true
    foreach adoc : manadocs
--    name = fs.name(adoc)
 -    page = fs.stem(adoc)
 -    section = page.split('.')[-1]
 -    mandirn = mandir / 'man' + section
