@@ -1,0 +1,44 @@
+USE_NAMESPACE_ID_SUPPORT turns on when the pidfd-utils.h syscall shim
+defines HAVE_PIDFD_OPEN (musl: no libc pidfd_open, but SYS_pidfd_open
+exists). Two musl gaps then surface: the upstream guard never checked
+name_to_handle_at (add the configure check and require it), and musl
+lacks the AT_HANDLE_FID constant (fall back to the kernel uapi value).
+Upstream candidate (musl-only break in 2.42; chimera will hit it too).
+
+diff --git a/meson.build b/meson.build
+index d23e1b0..252c7ca 100644
+--- a/meson.build
++++ b/meson.build
+@@ -653,6 +653,7 @@ funcs = '''
+         move_mount
+         mount_setattr
+         nanosleep
++        name_to_handle_at
+         ntp_gettime
+         open_tree
+         personality
+diff --git a/sys-utils/nsenter.c b/sys-utils/nsenter.c
+index e10ba9c..6a57d43 100644
+--- a/sys-utils/nsenter.c
++++ b/sys-utils/nsenter.c
+@@ -54,10 +54,19 @@
+ #include "linux_version.h"
+ #include "pidutils.h"
+ 
+-#if defined(HAVE_STRUCT_NSFS_FILE_HANDLE) && defined(HAVE_PIDFD_OPEN)
++#if defined(HAVE_STRUCT_NSFS_FILE_HANDLE) && defined(HAVE_PIDFD_OPEN) \
++    && defined(HAVE_NAME_TO_HANDLE_AT)
+ # define USE_NAMESPACE_ID_SUPPORT
+ #endif
+ 
++#ifdef USE_NAMESPACE_ID_SUPPORT
++/* musl has name_to_handle_at but not the flag constant (kernel uapi
++   value, from glibc's bits/fcntl-linux.h) */
++# ifndef AT_HANDLE_FID
++#  define AT_HANDLE_FID 0x200
++# endif
++#endif
++
+ static struct namespace_file {
+ 	int nstype;
+ 	const char *name;
