@@ -1,5 +1,5 @@
 pkgname = "util-linux"
-pkgver = "2.42"
+pkgver = "2.42.1"
 pkgrel = 0
 build_style = "meson"
 configure_args = [
@@ -67,10 +67,12 @@ depends = [self.with_pkgver("util-linux-common")]
 pkgdesc = "Miscellaneous Linux utilities"
 license = "GPL-2.0-or-later"
 url = "https://www.kernel.org/pub/linux/utils/util-linux"
-# NOTE: v<pkgver> works while pkgver is two-part (2.42); for x.y.z the
-# directory is v<x.y> (restore the pkgver[:-2] idiom then).
-source = f"$(KERNEL_SITE)/utils/util-linux/v{pkgver}/util-linux-{pkgver}.tar.xz"
-sha256 = "3452b260bbaa775d6e749ac3bb22111785003fc1f444970025c8da26dfa758e9"
+# NOTE: three-part pkgver needs v<pkgver[:-2]> (the directory is v<x.y>);
+# for two-part pkgver use v<pkgver> instead.
+source = (
+    f"$(KERNEL_SITE)/utils/util-linux/v{pkgver[:-2]}/util-linux-{pkgver}.tar.xz"
+)
+sha256 = "82e9158eb12a9b0b569d84e1687fed9dd18fe89ccd8ef5ac3427218a7c0d7f7f"
 tool_flags = {"CFLAGS": ["-D_DIRENT_HAVE_D_TYPE"]}
 # checkdepends are missing
 options = ["!check"]
