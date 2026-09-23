@@ -17,13 +17,15 @@ sha256 = "a18445df86a20068f7b17609d12d6f635de488958579ae7a2b143a244ba7e63f"
 # FIXME lintpixmaps
 options = ["!lintpixmaps"]
 
-if self.profile().wordsize == 32:
+if self.profile.wordsize == 32:
     broken = "needs atomic64"
 
 
 def install(self):
+    from cbuild.util import cargo
+
     for binary in ["yazi", "ya"]:
-        self.install_bin(f"./target/{self.profile().triplet}/release/{binary}")
+        self.install_bin(cargo.target_path(self, binary))
 
     with self.pushd("yazi-boot/completions"):
         self.install_completion("yazi.bash", "bash")

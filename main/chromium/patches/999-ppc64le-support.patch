@@ -56,8 +56,8 @@ index d38db0a..038ffeb 100644
  //     PA_MUSTTAIL return Func1(d + 1);  // `Func1()` will be tail-called.
  //   }
  // ```
--#if PA_HAS_CPP_ATTRIBUTE(clang::musttail)
-+#if PA_HAS_CPP_ATTRIBUTE(clang::musttail) && !defined(__powerpc__)
+-#if __has_cpp_attribute(clang::musttail)
++#if __has_cpp_attribute(clang::musttail) && !defined(__powerpc__)
  #define PA_MUSTTAIL [[clang::musttail]]
  #else
  #define PA_MUSTTAIL

@@ -1063,7 +1063,8 @@ Keep in mind that default values may be overridden by build styles.
   `wrksrc` that the source's extracted result will have. Specifying an empty
   string or `.` implies default behavior. Effectively all sources that have
   a path that is not the default will be extracted separately and then moved
-  into place.
+  into place. Source paths starting with `+` will replace any previous path
+  already there.
 * `subdesc` *(str)* The package sub-description which will be appended to
   the main description as ` (subdesc)`.
 * `tools` *(dict)* This can be used to override default tools. Refer to the
@@ -2134,7 +2135,7 @@ More about that in the respective API sections, but the API allows
 one to retrieve compiler flags in proper architecture-specific way,
 check if we are cross-compiling and otherwise inspect the target.
 
-API-side, the profile (retrieved with `self.profile()` for example)
+API-side, the profile (retrieved with `self.profile` for example)
 is represented as a `Profile` object. It looks like this:
 
 ```
@@ -2991,11 +2992,10 @@ with self.stamp("test") as s:
 The `check()` method ensures that the code following it is not run if the
 stamp file already exists. The script will proceed after the context.
 
-##### def profile(self, target = None)
+##### def get_profile(self, target = None)
 
-If `target` is not given, returns the current profile, otherwise only
-to be used as a context manager. Temporarily overrides the current build
-profile to the given `target`, which can be a specific profile name (for
+If `target` is not given, returns the current profile, else returns the
+profile defined by `target`, which can be a specific profile name (for
 example `aarch64`) or the special aliases `host` and `target`, which refer
 to the build machine and the target machine respectively (the target machine
 is the same as build machine when not cross compiling).
@@ -3004,21 +3004,35 @@ It is also possible to specify `target:native` as well as e.g. `aarch64:native`
 to force a non-cross profile in an environment where target would otherwise
 be cross. This is useful for particular cases of compiler flags and so on.
 
+##### @property def profile(self)
+
+Equivalent to `self.get_profile()` but as a property accessor for more
+convenient syntax.
+
+Used like:
+
+```
+if self.profile.endian == "big":
+    ...
+```
+
+##### @contextmanager def use_profile(self, target)
+
+Temporarily overrides the current build profile to the given `target`, which
+can be any name that can be passed to `self.get_profile(target)`.
+
 Usage:
 
 ```
-with self.profile("aarch64") as pf:
+with self.use_profile("aarch64") as pf:
     ... do something that we need for aarch64 at the time ...
-
-if self.profile().endian == "big":
-    ...
 ```
 
 ##### def get_tool_flags(self, name, extra_flags = [], hardening = [], shell = False, target = None)
 
 Get specific tool flags (e.g. `CFLAGS`) for the current profile or for `target`.
 
-The `target` argument is the same as for `profile()`.
+The `target` argument is the same as for `get_profile()`.
 
 See the section on tools and tool flags for more information.
 
@@ -3045,7 +3059,7 @@ A shortcut for `get_tool_flags` with `LDFLAGS`.
 
 Get the specific tool (e.g. `CC`) for the current profile or for `target`.
 
-The `target` argument is the same as for `profile()`.
+The `target` argument is the same as for `get_profile()`.
 
 This properly deals with cross-compiling, taking care of adding the right
 prefix where needed and so on. It should always be used instead of querying
@@ -3058,7 +3072,7 @@ as well as the current profile or the `target`) has the given hardening
 flag enabled. For a hardening flag to be enabled, it must not be disabled
 by the template or defaults, and it must be supported for the target.
 
-The `target` argument is the same as for `profile()`.
+The `target` argument is the same as for `get_profile()`.
 
 ##### def has_lto(self, target = None, force = False)
 
@@ -3404,6 +3418,15 @@ Clears the file checksums in `.cargo-checksum.json` of a vendored crate.
 You will need to do this for every crate you patch, as Cargo verifies the
 checksums of every file specified in there. Clearing effectively allows
 easy distro patching.
+
+##### def target_path(pkg, name, base_path = "target", profile = "release")
+
+Returns a path to a file within Cargo build tree. To be used to simplify
+file access. The result is a string with the format:
+
+```
+base_path/pkg.profile.triplet/profile/name
+```
 
 #### cbuild.util.cmake
 

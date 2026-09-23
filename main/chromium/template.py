@@ -1,6 +1,6 @@
 pkgname = "chromium"
 # https://chromiumdash.appspot.com/releases?platform=Linux
-pkgver = "152.0.7977.64"
+pkgver = "153.0.8010.52"
 pkgrel = 0
 archs = ["aarch64", "ppc64le", "x86_64"]
 configure_args = [
@@ -144,9 +144,9 @@ source = [
     f"https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/{pkgver}/chromium-{pkgver}-linux.tar.xz",
     "https://registry.npmjs.org/@rollup/wasm-node/-/wasm-node-4.22.4.tgz",
 ]
-source_paths = [".", "rollup"]
+source_paths = [".", "rollup", "typescript"]
 sha256 = [
-    "4f96a2d9e87778b2bab2901d88127b00c108060e9d6f424425c715366f14d435",
+    "3233497c752d44bf1c6ee654bc85ed506d75638e386309439730f62424c29a1b",
     "ee49bf67bd9bee869405af78162d028e2af0fcfca80497404f56b1b99f272717",
 ]
 debug_level = 1
@@ -171,9 +171,32 @@ file_modes = {
 }
 hardening = ["!scp"]
 # lol
-options = ["etcfiles", "!cross", "!check", "!scanshlibs"]
+options = ["!ci", "etcfiles", "!cross", "!check", "!scanshlibs"]
 
-match self.profile().arch:
+match self.profile.arch:
+    case "aarch64":
+        source += [
+            "https://github.com/microsoft/TypeScript/releases/download/v7.0.2/typescript-linux-arm64.tgz"
+        ]
+        sha256 += [
+            "c83d931ac9dd7549cde6e71246aa9d6a9812843023df3e277fe3b5dcf41dd0ea"
+        ]
+    case "ppc64le":
+        source += [
+            "https://github.com/microsoft/TypeScript/releases/download/v7.0.2/typescript-linux-ppc64.tgz"
+        ]
+        sha256 += [
+            "8c30ad95ff40cff8bba2ab294abde3bfee6fa12b2b649f80ec90ef3188842db1"
+        ]
+    case "x86_64":
+        source += [
+            "https://github.com/microsoft/TypeScript/releases/download/v7.0.2/typescript-linux-x64.tgz"
+        ]
+        sha256 += [
+            "7ecad6f67377e831856367ab062ef394f21506a611405bf8ac0ff039348637d3"
+        ]
+
+match self.profile.arch:
     case "ppc64le" | "riscv64":
         # trap in add_label_offset() (assembler-ppc.cc)
         # also crashes on riscv64
@@ -181,6 +204,8 @@ match self.profile().arch:
 
 
 def post_patch(self):
+    from cbuild.util import patch
+
     # replace wrong node with a working one
     self.rm("third_party/node/linux/node-linux-x64/bin/node", force=True)
     self.mkdir("third_party/node/linux/node-linux-x64/bin", parents=True)
@@ -211,6 +236,19 @@ def post_patch(self):
     self.ln_s(
         "/usr/bin/go", "third_party/dawn/tools/golang/linux-unknown/bin/go"
     )
+    # replace x64 typescript with the one for our correct platform
+    # and patch the library to suit whatever google is doing
+    self.rm("third_party/typescript/linux-amd64/src", recursive=True)
+    patch.patch(
+        self,
+        list(
+            (self.cwd / "third_party/typescript/linux-amd64/3pp/patches").glob(
+                "*.patch"
+            )
+        ),
+        wrksrc="typescript",
+    )
+    self.mv("typescript", "third_party/typescript/linux-amd64/src")
 
     self.cp(self.files_path / "unbundle.sh", ".")
     self.cp(self.files_path / "pp-data.sh", ".")
@@ -223,7 +261,7 @@ def post_patch(self):
 
 def configure(self):
     # where we mess with libvpx configuration, regen the files
-    if self.profile().arch == "ppc64le":
+    if self.profile.arch == "ppc64le":
         self.do(
             self.chroot_cwd / "third_party/libvpx/generate_gni.sh",
             wrksrc="third_party/libvpx",
@@ -270,7 +308,7 @@ def configure(self):
     _lto = "true" if self.has_lto() else "false"
     _maglev = "true"
 
-    match self.profile().arch:
+    match self.profile.arch:
         case "aarch64":
             _confargs.append('target_cpu="arm64"')
             # _cfi = "true"
