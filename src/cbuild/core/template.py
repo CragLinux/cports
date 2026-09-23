@@ -360,6 +360,7 @@ default_options = {
     "execstack": (False, False),
     "foreignelf": (False, False),
     "parallel": (True, True),
+    "ci": (True, True),
     "eepy": (False, True),
     "debug": (True, True),
     "strip": (True, False),
@@ -573,7 +574,7 @@ sites = {
     "xorg": "https://www.x.org/releases/individual",
     "cpan": "https://www.cpan.org/modules/by-module",
     "pypi": "https://files.pythonhosted.org/packages/source",
-    "gnu": "https://ftpmirror.gnu.org/gnu",
+    "gnu": "https://ftpmirror.gnu.org",
     "kde": "https://download.kde.org/stable",
     "xfce": "https://archive.xfce.org/src",
 }
@@ -722,6 +723,7 @@ class Template(Package):
         stage=3,
         bulk_mode=False,
         allow_restricted=True,
+        allow_ci=True,
         data=None,
         init=True,
         contents=None,
@@ -776,6 +778,7 @@ class Template(Package):
         self.conf_jobs = jobs[0]
         self.conf_link_threads = jobs[1]
         self._force_check = force_check
+        self._allow_ci = allow_ci
         self._allow_restricted = allow_restricted
         self._data = data if data else {}
         self._linter = linter
@@ -1073,9 +1076,11 @@ class Template(Package):
             )
         elif self.restricted and not self._allow_restricted:
             self.broken = f"cannot be built, it's restricted: {self.restricted}"
+        elif not self.options["ci"] and not self._allow_ci:
+            self.broken = "cannot be built in CI environment"
         elif self.repository not in _allow_cats:
             self.broken = f"cannot be built, disallowed by cbuild (not in {', '.join(_allow_cats)})"
-        elif self.profile().cross and not self.options["cross"]:
+        elif self.profile.cross and not self.options["cross"]:
             self.broken = "cannot be cross-compiled"
 
         # if archs is present, validate it, it may mark the package broken
@@ -1111,7 +1116,7 @@ class Template(Package):
         bdeps = {}
         visited = {}
         hds, tds, rds = dependencies.setup_depends(self, True)
-        for bd in (hds + tds) if not self.profile().cross else tds:
+        for bd in (hds + tds) if not self.profile.cross else tds:
             if bd in visited:
                 continue
             visited[bd] = True
@@ -1192,8 +1197,8 @@ class Template(Package):
         self.destdir_base = (
             paths.builddir() / "destdir" / f"{self.pkgname}-{self.pkgver}"
         )
-        if self.profile().cross:
-            self.destdir_base = self.destdir_base / self.profile().arch
+        if self.profile.cross:
+            self.destdir_base = self.destdir_base / self.profile.arch
 
         self.destdir = self.destdir_base / self.pkgname
 
@@ -1218,9 +1223,9 @@ class Template(Package):
             self.chroot_sources_path = (
                 pathlib.Path("/sources") / f"{self.pkgname}-{self.pkgver}"
             )
-            if self.profile().cross:
+            if self.profile.cross:
                 self.chroot_destdir_base = (
-                    self.chroot_destdir_base / self.profile().arch
+                    self.chroot_destdir_base / self.profile.arch
                 )
 
         self.chroot_destdir = self.chroot_destdir_base / self.pkgname
@@ -1244,7 +1249,7 @@ class Template(Package):
             self.link_threads = self.conf_link_threads
 
         # fill the remaining toolflag lists so it's complete
-        for tf in self.profile()._get_supported_tool_flags():
+        for tf in self.profile._get_supported_tool_flags():
             if tf not in self.tool_flags:
                 self.tool_flags[tf] = []
 
@@ -1649,7 +1654,7 @@ class Template(Package):
         # if already broken, skip validating it
         if self.broken:
             return
-        bprof = self.profile()
+        bprof = self.profile
         archn = bprof.arch
         # no archs specified: we match always
         if not self.archs:
@@ -1830,7 +1835,7 @@ class Template(Package):
             )
 
     def is_built(self, quiet=False):
-        archn = self.profile().arch
+        archn = self.profile.arch
         with flock.lock(flock.apklock(archn)):
             pinfo = cli.query(
                 ["repositories", "version"],
@@ -1862,7 +1867,7 @@ class Template(Package):
         path=None,
         tmpfiles=None,
     ):
-        cpf = self.profile()
+        cpf = self.profile
 
         cenv = {
             "CBUILD_TARGET_MACHINE": cpf.arch,
@@ -1909,7 +1914,7 @@ class Template(Package):
         cenv["LD"] = self.get_tool("LD")
         cenv["PKG_CONFIG"] = self.get_tool("PKG_CONFIG")
 
-        with self.profile("host") as hpf:
+        with self.use_profile("host") as hpf:
             for k in ["CC", "CXX", "CPP", "LD", "PKG_CONFIG"]:
                 cenv[f"BUILD_{k}"] = cenv[f"{k}_FOR_BUILD"] = self.get_tool(k)
 
@@ -2065,9 +2070,9 @@ class Template(Package):
     def can_lto(self, target=None):
         return pkg_profile(self, target)._has_lto(self.stage)
 
-    @contextlib.contextmanager
-    def _profile(self, target):
-        old_tgt = self._current_profile
+    def get_profile(self, target=None):
+        if target is None:
+            return self._current_profile
 
         if self.stage == 0 and (target == "host" or target == "target"):
             target = "bootstrap"
@@ -2078,16 +2083,21 @@ class Template(Package):
         elif target == "target:native":
             target = f"{self._target_profile.arch}:native"
 
+        return profile.get_profile(target)
+
+    @property
+    def profile(self):
+        return self.get_profile()
+
+    @contextlib.contextmanager
+    def use_profile(self, target):
+        old_tgt = self.get_profile()
+
         try:
-            self._current_profile = profile.get_profile(target)
+            self._current_profile = self.get_profile(target)
             yield self._current_profile
         finally:
             self._current_profile = old_tgt
-
-    def profile(self, target=None):
-        if target is None:
-            return self._current_profile
-        return self._profile(target)
 
     def uninstall(self, path, glob=False):
         if path.startswith("/"):

@@ -25,10 +25,12 @@ def post_prepare(self):
 
 
 def post_build(self):
+    from cbuild.util import cargo
+
     for shell in ["bash", "fish", "nushell", "zsh"]:
         with open(f"{self.cwd}/jj.{shell}", "w") as o:
             self.do(
-                f"target/{self.profile().triplet}/release/jj",
+                cargo.target_path(self, "jj"),
                 "util",
                 "completion",
                 shell,
@@ -37,9 +39,11 @@ def post_build(self):
 
 
 def install(self):
-    self.install_bin(f"target/{self.profile().triplet}/release/jj")
+    from cbuild.util import cargo
+
+    self.install_bin(cargo.target_path(self, "jj"))
     self.do(
-        f"target/{self.profile().triplet}/release/jj",
+        cargo.target_path(self, "jj"),
         "util",
         "install-man-pages",
         f"{self.chroot_destdir}/usr/share/man",

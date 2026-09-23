@@ -1,5 +1,5 @@
 pkgname = "unbound"
-pkgver = "1.25.2"
+pkgver = "1.26.0"
 pkgrel = 0
 build_style = "gnu_configure"
 configure_args = [
@@ -14,12 +14,12 @@ configure_args = [
     "--with-rootkey-file=/usr/share/dns/root.key",
     "--with-conf-file=/etc/unbound/unbound.conf",
     "--with-pidfile=/run/unbound.pid",
-    f"--with-libevent={self.profile().sysroot / 'usr'}",
-    f"--with-libexpat={self.profile().sysroot / 'usr'}",
-    f"--with-libhiredis={self.profile().sysroot / 'usr'}",
-    f"--with-libnghttp2={self.profile().sysroot / 'usr'}",
-    f"--with-protobuf-c={self.profile().sysroot / 'usr'}",
-    f"--with-ssl={self.profile().sysroot / 'usr'}",
+    f"--with-libevent={self.profile.sysroot / 'usr'}",
+    f"--with-libexpat={self.profile.sysroot / 'usr'}",
+    f"--with-libhiredis={self.profile.sysroot / 'usr'}",
+    f"--with-libnghttp2={self.profile.sysroot / 'usr'}",
+    f"--with-protobuf-c={self.profile.sysroot / 'usr'}",
+    f"--with-ssl={self.profile.sysroot / 'usr'}",
 ]
 make_dir = "."  # fails to build otherwise
 hostmakedepends = [
@@ -42,7 +42,7 @@ pkgdesc = "Validating, recursive, and caching DNS resolver"
 license = "BSD-3-Clause"
 url = "https://nlnetlabs.nl/projects/unbound/about"
 source = f"https://nlnetlabs.nl/downloads/unbound/unbound-{pkgver}.tar.gz"
-sha256 = "0d92275c703d5f5f8baba3dab22117dd8c29b495588a5c229768ed6581566600"
+sha256 = "77458a7156e275c0b7b17fabcb357cb12445d95cfcb26fb9bb7d5ecba45e0b63"
 skip_dependencies = ["usr/lib/dinit.d/*"]
 options = ["etcfiles"]
 
