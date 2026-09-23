@@ -51,7 +51,7 @@ if self.profile.arch == "riscv64":
     # ftbfs
     configure_args += ["-Dtests=false"]
 
-if self.profile().cross:
+if self.profile.cross:
     # gobject-introspection is marked !cross ("tons of janky hackery"),
     # so a cross glib cannot have introspection data; nothing in a
     # cross-built (self-hosted arch) repo consumes it either.

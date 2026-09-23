@@ -50,7 +50,7 @@ tool_flags = {
 # arm repo: main/protobuf is marked broken for cross builds. Build
 # elfutils without debuginfod there; everything else (libelf/libdw/tools)
 # is unaffected.
-_have_debuginfod = self.profile().arch not in ("armv7", "armhf")
+_have_debuginfod = self.profile.arch not in ("armv7", "armhf")
 
 if _have_debuginfod:
     configure_args += ["--enable-debuginfod", "--enable-libdebuginfod"]
@@ -58,7 +58,7 @@ if _have_debuginfod:
 else:
     configure_args += ["--disable-debuginfod", "--disable-libdebuginfod"]
 
-if self.profile().arch == "x86_64":
+if self.profile.arch == "x86_64":
     makedepends += ["sysprof-capture"]
     configure_args += ["--enable-stacktrace"]
 
