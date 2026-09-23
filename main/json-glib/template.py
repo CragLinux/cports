@@ -4,7 +4,7 @@ pkgrel = 0
 build_style = "meson"
 configure_args = ["-Dintrospection=enabled", "-Dinstalled_tests=false"]
 
-if self.profile().cross:
+if self.profile.cross:
     # gobject-introspection is !cross; same rationale as main/glib
     configure_args += ["-Dintrospection=disabled"]
 hostmakedepends = [
