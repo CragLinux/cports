@@ -204,7 +204,7 @@ def configure(self):
     from cbuild.util import cmake
 
     # when bootstrapping, this will check the actual profile
-    with self.profile(self.profile.arch) as pf:
+    with self.use_profile(self.profile.arch) as pf:
         trip = pf.triplet
 
     for f in ["clang", "clang++"]:
@@ -245,7 +245,7 @@ def post_install(self):
     self.install_bin(self.files_path / "c89")
 
     # make stage0 bootstrap profile happy
-    with self.profile(self.profile.arch) as pf:
+    with self.use_profile(self.profile.arch) as pf:
         trip = pf.triplet
 
     # arch-prefixed symlinks for cross consistency (no config file)
