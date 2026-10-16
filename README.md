@@ -8,8 +8,10 @@
 > this fork to Chimera, and do not treat packages built here as Chimera
 > packages.
 >
-> **Provenance.** Based on upstream commit `50857aa08` ("user/scc: skip
-> tests failing on loongarch"). The packaging system (`cbuild`), the API,
+> **Provenance.** Based on upstream commit `4964f1f5f` (the fork point —
+> see `build/cports-fork-point` in the CragLinux repo; the original fork
+> was `50857aa08`, and the fork delta was later merged onto a newer
+> upstream master per AD-029). The packaging system (`cbuild`), the API,
 > and the vast majority of templates are Chimera's work, used under their
 > BSD license (retained verbatim in [`COPYING.md`](COPYING.md)).
 > CragLinux's changes sit on top as ordinary commits and are limited to:
@@ -25,7 +27,10 @@
 > independent review flagged the risk of upstream changes silently
 > breaking our pinned builds. Owning a fork removes that coupling; the
 > trade-off is that CragLinux now maintains version and security currency
-> for this tree itself. We re-pin deliberately, never automatically.
+> for this tree itself. We re-pin deliberately, never automatically. As
+> of AD-030 (2026-10-15) Crag **no longer merges upstream master** into
+> this fork: the tree is managed independently, and upstream changes are
+> cherry-picked when they are worth taking.
 >
 > **Contributing.** This fork welcomes AI-assisted contributions — see
 > [`CONTRIBUTING.md`](CONTRIBUTING.md). Distribution-agnostic template
