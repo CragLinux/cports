@@ -3,7 +3,7 @@ pkgver = "2.03.33"
 pkgrel = 1
 build_style = "gnu_configure"
 configure_args = [
-    "--libexecdir=/usr/libexec",  # TODO switch libexec
+    "--with-libexecdir=/usr/lib",
     "--enable-editline",
     "--enable-pkgconfig",
     "--enable-fsadm",
