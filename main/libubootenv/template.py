@@ -9,8 +9,8 @@
 # Crag-specific content; see build/patches/cports/UPSTREAMING.md process
 # note).
 pkgname = "libubootenv"
-pkgver = "0.3.7"
-pkgrel = 1
+pkgver = "0.3.8"
+pkgrel = 0
 build_style = "cmake"
 hostmakedepends = ["cmake", "ninja", "pkgconf"]
 makedepends = [
@@ -23,7 +23,7 @@ pkgdesc = "U-Boot environment access library and tools"
 license = "LGPL-2.1-or-later"
 url = "https://github.com/sbabic/libubootenv"
 source = f"{url}/archive/refs/tags/v{pkgver}.tar.gz>libubootenv-{pkgver}.tar.gz"
-sha256 = "92021fc5a0a965030588d0c867a771d28b28c0d17c9fd022f0dafe9f01de714e"
+sha256 = "3374b5166306d976cfa971a507349101ad4becc7f1fae503abaa7957363a802d"
 # NDEBUG: without it, libuboot_open() prints "Environment OK, copy 0" to
 # STDOUT (uboot_env.c, gated on !NDEBUG; cbuild's buildtype=plain defines
 # nothing). RAUC parses fw_printenv stdout, so that line gets ingested as
