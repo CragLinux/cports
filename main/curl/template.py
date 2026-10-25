@@ -1,6 +1,6 @@
 pkgname = "curl"
 pkgver = "8.23.0"
-pkgrel = 0
+pkgrel = 1
 build_style = "gnu_configure"
 configure_args = [
     "--enable-ares",
@@ -50,7 +50,7 @@ checkdepends = [
 ]
 depends = ["ca-certificates"]
 pkgdesc = "Command line tool for transferring data with URL syntax"
-license = "MIT"
+license = "curl"
 url = "https://curl.se"
 source = f"{url}/download/curl-{pkgver}.tar.xz"
 sha256 = "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5"
