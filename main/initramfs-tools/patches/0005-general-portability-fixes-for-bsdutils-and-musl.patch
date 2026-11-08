@@ -1,17 +1,17 @@
-
-From cedc4b27f5d0746769ba8b6dd9db29d93f0b7260 Mon Sep 17 00:00:00 2001
+From 951efddf4f57ea741c20986039eee5e33409c4d5 Mon Sep 17 00:00:00 2001
 From: q66 <q66@chimera-linux.org>
 Date: Tue, 22 Apr 2025 16:21:48 +0200
 Subject: [PATCH 5/8] general portability fixes for bsdutils and musl
 
 ---
  hook-functions   | 35 ++++++++---------------------------
- mkinitramfs      | 33 ++++++++++++---------------------
+ mkinitramfs      | 45 +++++++++++++++++++++------------------------
+ unmkinitramfs.c  | 20 ++++++++++++--------
  update-initramfs |  2 +-
- 4 files changed, 31 insertions(+), 60 deletions(-)
+ 4 files changed, 42 insertions(+), 60 deletions(-)
 
 diff --git a/hook-functions b/hook-functions
-index fa4a48e..058b95d 100644
+index 0d3d580..9841300 100644
 --- a/hook-functions
 +++ b/hook-functions
 @@ -260,30 +260,10 @@ copy_exec() {
@@ -71,10 +71,10 @@ index fa4a48e..058b95d 100644
  	# Look up device in sysfs
  	dev_sys_path="/sys/dev/block/$dev_num"
 diff --git a/mkinitramfs b/mkinitramfs
-index 2102d1d..6b5e2c6 100755
+index 9fb3e40..2e27fa1 100755
 --- a/mkinitramfs
 +++ b/mkinitramfs
-@@ -393,16 +393,16 @@ add_builtin_firmware
+@@ -391,16 +391,16 @@ add_builtin_firmware
  cp -p /usr/share/initramfs-tools/init "${DESTDIR}/init"
  
  # add existant boot scripts
@@ -95,7 +95,7 @@ index 2102d1d..6b5e2c6 100755
  	[ -d "${DESTDIR}/scripts/$(dirname "${b}")" ] \
  		|| mkdir -p "${DESTDIR}/scripts/$(dirname "${b}")"
  	cp -p "${CONFDIR}/scripts/${b}" "${DESTDIR}/scripts/$(dirname "${b}")/"
-@@ -456,19 +456,6 @@ hidden_dep_add_modules
+@@ -454,19 +454,6 @@ hidden_dep_add_modules
  depmod -a -b "${DESTDIR}" "${version}"
  rm -f "${DESTDIR}/lib/modules/${version}"/modules.*map
  
@@ -115,18 +115,30 @@ index 2102d1d..6b5e2c6 100755
  # Apply DSDT to initramfs
  if [ -e "${CONFDIR}/DSDT.aml" ]; then
  	copy_file DSDT "${CONFDIR}/DSDT.aml"
-@@ -485,8 +472,8 @@ if [ -n "${SOURCE_DATE_EPOCH}" ]; then
- 	find "${DESTDIR}" -newermt "@${SOURCE_DATE_EPOCH}" -print0 | \
- 		xargs -0r touch --no-dereference --date="@${SOURCE_DATE_EPOCH}"
- 
+@@ -480,11 +467,17 @@ fi
+ # if SOURCE_DATE_EPOCH is set, try and create a reproducible image
+ if [ -n "${SOURCE_DATE_EPOCH}" ]; then
+ 	# ensure that no timestamps are newer than $SOURCE_DATE_EPOCH
+-	find "${DESTDIR}" -newermt "@${SOURCE_DATE_EPOCH}" -print0 | \
+-		xargs -0r touch --no-dereference --date="@${SOURCE_DATE_EPOCH}"
+-
 -	# --reproducible requires cpio >= 2.12
 -	cpio_reproducible="--reproducible"
++	# (portable: no GNU-only find/touch/xargs extensions; the reference
++	# file must stay outside ${DESTDIR} or it would be packed in)
++	ref="$(mktemp "${TMPDIR:-/var/tmp}/mkinitramfs-TS_XXXXXX")" || exit 1
++	reftime=$(date -r "${SOURCE_DATE_EPOCH}" +%Y%m%d%H%M.%S 2>/dev/null || \
++		date -d "@${SOURCE_DATE_EPOCH}" +%Y%m%d%H%M.%S)
++	touch -t "${reftime}" "${ref}"
++	find "${DESTDIR}" -newer "${ref}" -exec touch -h -r "${ref}" {} +
++	rm -f "${ref}"
++
 +	# FIXME handle
 +	cpio_reproducible=
  fi
  
  # Read list of files and echo them plus all leading directories.
-@@ -537,14 +524,18 @@ cd  "${DESTDIR}" || exit 1
+@@ -535,14 +528,18 @@ cd  "${DESTDIR}" || exit 1
  		fi
  
  		if [ -s "${__TMPUNCOMPRESSEDFILES}" ]; then
@@ -236,10 +248,10 @@ index d69fd7a..30ea754 100644
  					ok = false;
  					break;
 diff --git a/update-initramfs b/update-initramfs
-index 30131e0..6db6aa1 100755
+index 7c543d5..9ec3c57 100755
 --- a/update-initramfs
 +++ b/update-initramfs
-@@ -224,7 +224,7 @@ set_highest_version()
+@@ -231,7 +231,7 @@ set_highest_version()
  
  has_been_updated_since_timestamp() {
  	local initramfs_timestamp timestamp="$1"
