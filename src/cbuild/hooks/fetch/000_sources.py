@@ -192,7 +192,9 @@ def fetch_url(url, dfile, dhdrs, ehdrs, idx, ntry, rbuf=None):
                 del hdrs[k]
         if ntry > 0:
             with fmtx:
-                hdrs["Range"] = f"bytes={fstatus[idx]}-{flens[idx]}"
+                # if we fetched a part of the stream, add it to the range
+                if flens[idx] > 0:
+                    hdrs["Range"] = f"bytes={fstatus[idx]}-{flens[idx]}"
         rq = request.Request(
             url,
             data=None,
@@ -201,7 +203,10 @@ def fetch_url(url, dfile, dhdrs, ehdrs, idx, ntry, rbuf=None):
         with request.urlopen(rq, context=fctx) as rqf:
             return fetch_stream(url, dfile, dhdrs, ehdrs, idx, ntry, rqf, rbuf)
     except Exception as e:
-        if ntry > 3:
+        # don't retry for 4xx status codes, it will just fail again
+        # (non-HTTP exceptions have no status attribute; retry those)
+        estatus = getattr(e, "status", None)
+        if ntry > 3 or (estatus is not None and 400 <= estatus < 500):
             return url, dfile, str(e)
         # try a few times on failures
         return fetch_url(url, dfile, dhdrs, ehdrs, idx, ntry + 1, rbuf)
