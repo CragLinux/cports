@@ -22,14 +22,13 @@ license = "BSD-2-Clause"
 url = "https://aomedia.org"
 source = f"https://storage.googleapis.com/aom-releases/libaom-{pkgver}.tar.gz"
 sha256 = "19e45a5a7192d690565229983dad900e76b513a02306c12053fb9a262cbeca7d"
-# requires a testdata download, tests take long
-options = ["!check"]
-
 tool_flags = {
     "CFLAGS": ["-D_GNU_SOURCE", "-DNDEBUG"],
     "CXXFLAGS": ["-D_GNU_SOURCE", "-DNDEBUG"],
     "LDFLAGS": ["-Wl,-z,stack-size=2097152"],
 }
+# requires a testdata download, tests take long
+options = ["!check"]
 
 match self.profile.arch:
     case "ppc64":

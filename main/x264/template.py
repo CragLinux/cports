@@ -12,12 +12,11 @@ license = "GPL-2.0-or-later"
 url = "https://www.videolan.org/developers/x264.html"
 source = f"https://code.videolan.org/videolan/x264/-/archive/{_commit}.tar.gz"
 sha256 = "8515baba9f82c723e07252747e9b0e166a16091ba72f2017387641724baec02d"
+tool_flags = {"CFLAGS": ["-fPIC", "-Wno-incompatible-function-pointer-types"]}
 # guilty until proven wrong
 hardening = ["!int"]
 # no check target
 options = ["!check"]
-
-tool_flags = {"CFLAGS": ["-fPIC", "-Wno-incompatible-function-pointer-types"]}
 
 match self.profile.arch:
     case "x86_64":
