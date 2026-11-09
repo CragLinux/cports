@@ -12,7 +12,7 @@ hostmakedepends = [
 ]
 makedepends = ["gtk+3-devel", "pango-devel", "xfconf-devel"]
 depends = [
-    "cmd:locate!chimerautils-extra",
+    "cmd:locate!cragutils-extra",
     "gtk+3",
     "pango",
     "xfconf",

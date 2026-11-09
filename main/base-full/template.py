@@ -135,7 +135,7 @@ def _(self):
     self.depends = [
         "bc-gh",
         "chimera-artwork",
-        "chimerautils-extra",
+        "cragutils-extra",
         "chrony",
         "file",
         "less",

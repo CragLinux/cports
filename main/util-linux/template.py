@@ -99,7 +99,7 @@ def post_install(self):
     for f in ["mount", "umount"]:
         (self.destdir / "usr/bin" / f).chmod(0o4755)
 
-    # conflicts with chimerautils, less, ugetopt
+    # conflicts with cragutils, less, ugetopt
     for f in [
         "addpart",
         "cal",

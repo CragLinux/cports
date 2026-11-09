@@ -5,13 +5,13 @@ _commit = "43b0a7d2c86fa51c85a3fdc532ac5ebf9ece83b1"
 build_style = "makefile"
 depends = [
     "cmd:apk!apk-tools",
-    "cmd:chroot!chimerautils",
+    "cmd:chroot!cragutils",
     "cmd:dialog!dialog",
     "cmd:findmnt!util-linux-mount",
-    "cmd:id!chimerautils",
+    "cmd:id!cragutils",
     "cmd:mount!util-linux-mount",
     "cmd:mountpoint!util-linux-mount",
-    "cmd:realpath!chimerautils",
+    "cmd:realpath!cragutils",
     "cmd:tar!libarchive-progs",
 ]
 pkgdesc = "Scripts to aid Chimera system installation"

@@ -2,7 +2,7 @@ pkgname = "acl"
 pkgver = "2.3.2"
 pkgrel = 1
 build_style = "gnu_configure"
-# cycle chimerautils -> acl -> automake -> chimerautils
+# cycle cragutils -> acl -> automake -> cragutils
 configure_gen = []
 hostmakedepends = ["pkgconf"]
 makedepends = ["attr-devel"]

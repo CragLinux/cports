@@ -13,7 +13,7 @@ depends = [
     "clang",
     "lld",
     "ncurses",
-    "chimerautils-extra",
+    "cragutils-extra",
     "apk-tools",
     "gmake",
     "libarchive-progs",

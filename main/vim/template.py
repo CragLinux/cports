@@ -40,7 +40,7 @@ options = ["etcfiles", "!check"]
 def post_install(self):
     self.install_file(self.files_path / "vimrc", "etc/vim")
     self.install_license("LICENSE")
-    # chimerautils-extra ex/view conflict with these symlinks
+    # cragutils-extra ex/view conflict with these symlinks
     # TODO: just rename and update the code in main.c:parse_command_name
     self.uninstall("usr/bin/ex")
     self.uninstall("usr/share/man/*/man1/ex.1", glob=True)

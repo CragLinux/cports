@@ -22,7 +22,7 @@ hostmakedepends = [
 makedepends = [
     "baloo-devel",
     "baloo-widgets-devel",
-    "chimerautils-devel",
+    "cragutils-devel",
     "kcmutils-devel",
     "kcrash-devel",
     "kdbusaddons-devel",

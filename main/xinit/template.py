@@ -5,7 +5,7 @@ build_style = "gnu_configure"
 configure_args = ["--with-xinitdir=/etc/X11/xinit"]
 hostmakedepends = ["automake", "pkgconf", "xorg-util-macros"]
 makedepends = ["libx11-devel"]
-depends = ["cmd:mcookie!chimerautils"]
+depends = ["cmd:mcookie!cragutils"]
 pkgdesc = "X init program"
 license = "MIT"
 url = "https://xorg.freedesktop.org"

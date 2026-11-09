@@ -19,7 +19,7 @@ hostmakedepends = [
 makedepends = [
     "argp-standalone",
     "bzip2-devel",
-    "chimerautils-devel",
+    "cragutils-devel",
     "json-c-devel",
     "libarchive-devel",
     "linux-headers",

@@ -26,7 +26,7 @@ configure_gen = []
 hostmakedepends = ["pkgconf"]
 depends = [self.with_pkgver("ncurses-base")]
 # we generally want this in a proper system as a soft dep
-install_if = [self.with_pkgver("ncurses-libs"), "chimerautils"]
+install_if = [self.with_pkgver("ncurses-libs"), "cragutils"]
 pkgdesc = "System V Release 4.0 curses emulation library"
 license = "MIT"
 url = "http://www.gnu.org/software/ncurses"

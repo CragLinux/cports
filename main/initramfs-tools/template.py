@@ -5,7 +5,7 @@ build_style = "makefile"
 make_install_args = [f"VERSION={pkgver}"]
 depends = [
     "base-kernel",
-    "cmd:awk!chimerautils",
+    "cmd:awk!cragutils",
     "cmd:cpio!libarchive-progs",
     "cmd:ischroot!debianutils",
     "cmd:logsave!e2fsprogs",
@@ -38,5 +38,5 @@ def post_install(self):
 
     # hook for core userland
     self.install_initramfs(
-        self.files_path / "chimerautils.initramfs-tools", name="chimerautils"
+        self.files_path / "cragutils.initramfs-tools", name="cragutils"
     )

@@ -1,4 +1,4 @@
-pkgname = "chimerautils"
+pkgname = "cragutils"
 pkgver = "15.1.2"
 pkgrel = 1
 # Crag's hardened userland fork (cragutils) — since 2026-11-08 this
@@ -9,7 +9,7 @@ pkgrel = 1
 _commit = "92d7bb8030834fbe11489c9a2a2a959fb8e983ef"
 build_style = "meson"
 configure_args = [
-    "--libexecdir=/usr/lib/chimerautils",
+    "--libexecdir=/usr/lib/cragutils",
     "-Dchimera_realpath=enabled",
 ]
 hostmakedepends = ["flex", "byacc", "meson", "pkgconf"]
@@ -30,7 +30,9 @@ provides = [
     self.with_pkgver("musl-fts"),
     self.with_pkgver("musl-rpmatch"),
 ]
-pkgdesc = "Crag Linux userland, built from the cragutils fork"
+# rename takeover (was main/chimerautils)
+replaces = ["chimerautils"]
+pkgdesc = "Crag Linux userland, hardened fork of chimerautils"
 license = "BSD-2-Clause"
 url = "https://github.com/CragLinux/cragutils"
 source = f"{url}/archive/{_commit}.tar.gz"
@@ -75,43 +77,45 @@ def post_install(self):
     # base shell
     self.install_shell("/usr/bin/sh")
     # tiny tools
-    tdest = "usr/lib/chimerautils/tiny"
+    tdest = "usr/lib/cragutils/tiny"
     self.install_dir(tdest)
     for f in (self.destdir / "usr/bin").glob("*.tiny"):
         self.mv(f, self.destdir / tdest / f.stem)
     # etc files, handled with tmpfiles
-    self.install_dir("usr/share/chimerautils")
-    self.install_tmpfiles(self.files_path / "chimerautils.conf")
+    self.install_dir("usr/share/cragutils")
+    self.install_tmpfiles(self.files_path / "cragutils.conf")
     self.install_tmpfiles(
-        self.files_path / "chimerautils-extra.conf", name="chimerautils-extra"
+        self.files_path / "cragutils-extra.conf", name="cragutils-extra"
     )
     for f in (self.destdir / "etc").iterdir():
-        self.mv(f, self.destdir / "usr/share/chimerautils")
+        self.mv(f, self.destdir / "usr/share/cragutils")
 
 
-@subpackage("chimerautils-devel-man")
+@subpackage("cragutils-devel-man")
 def _(self):
     # former conflicts with fts/rpmatch manpages
-    self.replaces = ["man-pages-devel<6.9.1-r3"]
+    self.replaces = ["man-pages-devel<6.9.1-r3", "chimerautils-devel-man"]
     return ["usr/share/man/man3"]
 
 
-@subpackage("chimerautils-devel")
+@subpackage("cragutils-devel")
 def _(self):
     # compat
     self.provides = [
         self.with_pkgver("musl-fts-devel"),
         self.with_pkgver("musl-rpmatch-devel"),
     ]
+    self.replaces = ["chimerautils-devel"]
     # explicitly non-lto
     self.options = ["ltostrip", "!splitstatic"]
     return self.default_devel()
 
 
-@subpackage("chimerautils-extra")
+@subpackage("cragutils-extra")
 def _(self):
     self.subdesc = "additional tools"
     self.depends = [self.parent]
+    self.replaces = ["chimerautils-extra"]
 
     return [
         "cmd:calendar",
@@ -139,8 +143,8 @@ def _(self):
         "man:remote.5",
         "man:locate.updatedb.8",
         "man:updatedb.8",
-        "usr/lib/chimerautils/locate.*",
-        "usr/lib/tmpfiles.d/chimerautils-extra.conf",
-        "usr/share/chimerautils/locate.rc",
+        "usr/lib/cragutils/locate.*",
+        "usr/lib/tmpfiles.d/cragutils-extra.conf",
+        "usr/share/cragutils/locate.rc",
         "usr/share/vi",
     ]

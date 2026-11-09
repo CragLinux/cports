@@ -6,7 +6,7 @@ make_check_target = "tests"
 make_check_args = ["PEDANTIC_CFLAGS=", "PEDANTIC_CXXFLAGS="]
 hostmakedepends = ["pkgconf"]
 makedepends = [
-    "chimerautils-devel",
+    "cragutils-devel",
     "file-devel",
     "fluidsynth-devel",
     "liblo-devel",

@@ -37,7 +37,7 @@ def install(self):
         self.rm("man8/ldconfig.8")
 
     # dead links due to getspnam.3 (provided by shadow)
-    # fts/rpmatch provided by chimerautils-devel-man
+    # fts/rpmatch provided by cragutils-devel-man
     with self.pushd(self.destdir / "usr/share/man/man3"):
         self.rm("endspent.3")
         self.rm("fgetspent.3")

@@ -4,7 +4,7 @@
 
 . /usr/share/initramfs-tools/hook-functions
 
-# provided by chimerautils-tiny
+# provided by the cragutils tiny tools
 BSD_TOOLS="
  [ basename cat chroot cp cut date dd dir dirname du echo
  egrep expand expr false fgrep find fmt fold grep
@@ -36,8 +36,8 @@ for kt in ${KLIBC_TOOLS}; do
 done
 
 for bt in ${BSD_TOOLS}; do
-    if [ -x /usr/lib/chimerautils/tiny/${bt} ]; then
-        copy_exec /usr/lib/chimerautils/tiny/${bt} /usr/bin/${bt}
+    if [ -x /usr/lib/cragutils/tiny/${bt} ]; then
+        copy_exec /usr/lib/cragutils/tiny/${bt} /usr/bin/${bt}
     else
         copy_exec /usr/bin/${bt}
     fi

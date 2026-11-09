@@ -5,7 +5,7 @@ build_style = "meta"
 depends = [
     "apk-tools",
     "bubblewrap",
-    "chimerautils",
+    "cragutils",
     "git",
     "openssl3",
     "python",

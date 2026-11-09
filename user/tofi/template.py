@@ -11,7 +11,7 @@ hostmakedepends = [
 ]
 makedepends = [
     "cairo-devel",
-    "chimerautils-devel",
+    "cragutils-devel",
     "freetype-devel",
     "libxkbcommon-devel",
     "linux-headers",

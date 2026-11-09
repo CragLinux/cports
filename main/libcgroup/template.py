@@ -13,7 +13,7 @@ hostmakedepends = [
     "pkgconf",
 ]
 makedepends = [
-    "chimerautils-devel",
+    "cragutils-devel",
     "linux-headers",
     "linux-pam-devel",
 ]

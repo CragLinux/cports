@@ -6,7 +6,7 @@ make_check_args = [
     "--",
     "--test-threads=1",
     # These tests will run `script -qec`, which is not
-    # compatible with chimerautils' script
+    # compatible with cragutils' script
     "--skip",
     "qrcode_shown_in_tty_when_enabled",
     "--skip",

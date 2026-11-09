@@ -26,7 +26,7 @@ hostmakedepends = [
 ]
 makedepends = [
     "bash-completion",
-    "chimerautils-devel",
+    "cragutils-devel",
     "elfutils-devel",
     "libbpf-devel",
     "libxml2-devel",

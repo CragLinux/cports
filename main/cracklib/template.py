@@ -10,7 +10,7 @@ hostmakedepends = [
     "libtool",
     "pkgconf",
 ]
-depends = ["cmd:gzip!chimerautils"]
+depends = ["cmd:gzip!cragutils"]
 triggers = ["/usr/share/cracklib"]
 pkgdesc = "Password checking library"
 license = "LGPL-2.1-or-later"

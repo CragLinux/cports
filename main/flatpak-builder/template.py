@@ -21,7 +21,7 @@ makedepends = [
 ]
 checkdepends = ["bash"]
 depends = [
-    "cmd:patch!chimerautils-extra",
+    "cmd:patch!cragutils-extra",
     "debugedit",
     "elfutils",
     "flatpak",

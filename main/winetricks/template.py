@@ -7,7 +7,7 @@ depends = [
     "cmd:ar!llvm-binutils",
     "cmd:cabextract!cabextract",
     "cmd:curl!curl",
-    "cmd:sha256sum!chimerautils",
+    "cmd:sha256sum!cragutils",
     "cmd:unzip!unzip",
     "cmd:wine!wine",
     "cmd:xdg-open!xdg-utils",

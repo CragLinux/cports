@@ -11,12 +11,12 @@ makedepends = [
     "linux-headers",
 ]
 depends = [
-    "cmd:awk!chimerautils",
+    "cmd:awk!cragutils",
     "cmd:fsck!util-linux-mount",
-    "cmd:grep!chimerautils",
-    "cmd:mkdir!chimerautils",
+    "cmd:grep!cragutils",
+    "cmd:mkdir!cragutils",
     "cmd:mount!util-linux-mount",
-    "cmd:sed!chimerautils",
+    "cmd:sed!cragutils",
     "cmd:snooze!snooze",
     "cmd:sulogin!shadow",
     "cmd:systemd-tmpfiles!sd-tools",
