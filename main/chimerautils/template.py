@@ -1,6 +1,12 @@
 pkgname = "chimerautils"
 pkgver = "15.1.2"
-pkgrel = 0
+pkgrel = 1
+# Crag's hardened userland fork (cragutils) — since 2026-11-08 this
+# package builds CragLinux/cragutils, NOT upstream chimera-linux/chimerautils.
+# pkgver tracks the upstream chimerautils base the fork content matches
+# (the daily userland watch imports upstream changes into the fork);
+# bump pkgrel on every fork content update (i.e. every _commit change).
+_commit = "92d7bb8030834fbe11489c9a2a2a959fb8e983ef"
 build_style = "meson"
 configure_args = [
     "--libexecdir=/usr/lib/chimerautils",
@@ -24,13 +30,14 @@ provides = [
     self.with_pkgver("musl-fts"),
     self.with_pkgver("musl-rpmatch"),
 ]
-pkgdesc = "Chimera Linux userland"
+pkgdesc = "Crag Linux userland, built from the cragutils fork"
 license = "BSD-2-Clause"
-url = "https://github.com/chimera-linux/chimerautils"
-source = f"{url}/archive/refs/tags/v{pkgver}.tar.gz"
-sha256 = "b03e279e0e291968852094ec2946329ac450c863eda909bed0b8a2e1baf884fe"
+url = "https://github.com/CragLinux/cragutils"
+source = f"{url}/archive/{_commit}.tar.gz"
+sha256 = "eb379f7df80ce0ba39b9e16fa391bdf6592bb6f938a251ac4d58952feded602d"
 hardening = ["vis", "cfi"]
-# no test suite
+# check disabled: the cragutils test suite runs in cragutils CI (meson
+# test + fuzz + differential), not inside the cbuild sandbox
 options = ["bootstrap", "!check"]
 
 if self.stage > 0:
