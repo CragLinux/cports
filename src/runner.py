@@ -1449,7 +1449,7 @@ def do_print_build_graph(tgt):
     _print_deps(root)
 
 
-def _get_unbuilt(outdated=False):
+def _get_unbuilt(outdated=False, skipped=False):
     from cbuild.core import chroot, template, paths
     import json
     import subprocess
@@ -1562,6 +1562,7 @@ def _get_unbuilt(outdated=False):
     fvers = []
     tvers = {}
     tmpls = {}
+    skipmap = {}
 
     def _get_tmpl(pn):
         try:
@@ -1570,8 +1571,10 @@ def _get_unbuilt(outdated=False):
             tmpls[pn] = tmpl
             tvers[pn] = f"{tmpl.pkgver}-r{tmpl.pkgrel}"
             # sentinel
-            if tmpls[pn].broken:
+            brok = tmpls[pn].broken
+            if brok:
                 tmpls[pn] = True
+                skipmap[pn] = brok
                 return True
         except Exception:
             tmpls[pn] = False
@@ -1590,12 +1593,18 @@ def _get_unbuilt(outdated=False):
         for dpn in tmpl.get_build_deps():
             if dpn in tmpls:
                 if tmpls[dpn] is True:
+                    if pn not in skipmap:
+                        skipmap[pn] = "indirect"
                     return True
             else:
                 if _get_tmpl(dpn):
+                    if pn not in skipmap:
+                        skipmap[pn] = "indirect"
                     return True
             # recurse
             if _check_tmpls(dpn):
+                if pn not in skipmap:
+                    skipmap[pn] = "indirect"
                 return True
         # mark it, don't need to go over it again
         tmpls[pn] = False
@@ -1609,6 +1618,8 @@ def _get_unbuilt(outdated=False):
         fvers.append(pn)
 
     if not fvers:
+        if skipped:
+            return [], skipmap
         return []
 
     vers = fvers
@@ -1620,6 +1631,9 @@ def _get_unbuilt(outdated=False):
         if _check_tmpls(pn):
             continue
         fvers.append((pn, tvers[pn] if pn in tvers else None))
+
+    if skipped:
+        return fvers, skipmap
 
     return fvers
 
@@ -1758,6 +1772,13 @@ def do_print_mismatched(tgt):
                 continue
             if not spkg.pkgname.startswith(f"{pkgr.pkgname}-"):
                 print(f"{pkgr.pkgname} -> {spkg.pkgname}")
+
+
+def do_print_broken(tgt):
+    pl, skipmap = _get_unbuilt(False, True)
+
+    for pkgn, pkgr in skipmap.items():
+        print(f"{pkgn}: {pkgr}")
 
 
 def do_pkg(tgt, pkgn=None, force=None, check=None, stage=None):
@@ -2782,6 +2803,10 @@ command_handlers = {
         do_print_mismatched,
         "Print subpackages that have wrong names",
     ),
+    "print-broken-pkgs": (
+        do_print_broken,
+        "Print all packages that cannot be built on the arch combo",
+    ),
     "prune-pkgs": (
         do_prune_pkgs,
         "Prune obsolete and removed packages from local repos",
@@ -2875,9 +2900,8 @@ def fire():
         chroot.set_host(opt_harch)
     else:
         chroot.set_host(cli.get_arch())
-
-    # check container and while at it perform arch checks
-    chroot.chroot_check(error=False)
+        # check container and while at it perform arch checks
+        chroot.chroot_check(error=False)
 
     # register extra packages
     chroot.set_extras(opt_epkgs.split())
