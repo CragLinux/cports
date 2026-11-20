@@ -122,6 +122,13 @@ def call(
     return_repos=False,
     chroot=False,
 ):
+    # harness workaround: host apk 3.0.3 drops a cross sysroot's
+    # "lib -> usr/lib" symlink on add; restore the initdb invariant
+    # before any apk op rooted there (later updates fail to open the db).
+    if root is not None and not chroot:
+        _rp = pathlib.Path(root)
+        if (_rp / "usr/lib").is_dir() and not (_rp / "lib").exists():
+            (_rp / "lib").symlink_to("usr/lib")
     if allow_network:
         allow_network = _use_net
     cmd = [
