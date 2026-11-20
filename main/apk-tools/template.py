@@ -1,6 +1,6 @@
 pkgname = "apk-tools"
-pkgver = "3.0.9"
-pkgrel = 1
+pkgver = "3.0.10"
+pkgrel = 0
 build_style = "meson"
 configure_args = [
     "-Dlua=disabled",
@@ -20,7 +20,7 @@ pkgdesc = "Alpine package manager"
 license = "GPL-2.0-only"
 url = "http://git.alpinelinux.org/cgit/apk-tools"
 source = f"https://gitlab.alpinelinux.org/alpine/apk-tools/-/archive/v{pkgver}/apk-tools-v{pkgver}.tar.gz"
-sha256 = "0063029a3eb228fd494b6804613ac53c30372a1a79ac83e23cefa78368767726"
+sha256 = "721512ae7dca2e79da9a36e965690456ee6a4b3febbcd7f932ccf3782863621e"
 compression = "deflate"
 options = ["bootstrap"]
 
